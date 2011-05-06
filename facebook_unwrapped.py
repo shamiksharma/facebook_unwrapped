@@ -170,7 +170,7 @@ class BaseHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 class MainHandler(BaseHandler):
    
   #
-  # Client might be in three states, when this call comes in.
+  # Client might be in one of three states, when this call comes in.
   #
   # 1. Brand new user - no token-in-cookie, and no code in url-arg
   # 2. In process of authenticating - no token, but code present in url-arg
