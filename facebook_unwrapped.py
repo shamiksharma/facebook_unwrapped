@@ -61,14 +61,29 @@ from urlparse import urlparse
 # Based on  
 #     http://developers.facebook.com/docs/authentication/
 #
-# Facebook Graph auth sequence is :
-#  - FB calls your SiteURL with POST.
-#  - You will find that "user" cookie is not there, so will send to LoginHandler
-#  - LoginHandler redirect to fb_auth_url with perms requested and CallbackPage
-#  - FB sends a "code" back to CallbackPage in URI.
-#  - CallbackPage calls fb_get_token_url with appid/appsecret/code and NextPage
-#  - FB sends a "access_token" to NextPage in URI
-#  - NextPage can make Fb-api calls with access_token
+# Facebook Graph auth sequence is as follows. User-U Facebook-F App-A
+#
+#  U<->F: User goes to your app's facebook page. FB's resposne page
+#         has its chrome and an IFRAME for your app.
+#  U->A : The app IFRAME makes a POST call to your SITE-URL
+#              A : App does not know about this user ("user" cookie is not there),
+#        A->U->F : App redirect's the user's browser to FB's oauth/authorize url
+#                  requesting the perms you want. App also provies a redirect_uri, 
+#                  where FB should redirect the user back.
+#          F<->U : FB gets the redirect and pops up the permissions dialog on the 
+#                  user's browser. The user clicks "Allow"
+#        F->U->A : FB sends a "code" back to the App at the callback location 
+#                  specified in redirect_uri.
+#           A->F : App uses code (along with appid&secret) to directly request FB 
+#                  for a user_access_token 
+#           F->A : FB sends a "access_token" in response
+#           A->F : App makes FB-API calls using the access_token
+#           A->F : App may make more FB-API calls using the access_token
+#  A->U: App uses the fb data to create its page and fill in the IFRAME.
+#
+#  Note that all these calls happen in the context of the original HTTP request.
+#  These long-standing connections are expensive for a webserver.
+#
 #-----------------------------------------------------------------------
 
 fb_app_page    = "http://apps.facebook.com/xxx-myapp-xxxx/"
