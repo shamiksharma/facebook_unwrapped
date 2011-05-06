@@ -41,6 +41,11 @@
 #        http://www.facebook.com/settings/?tab=applications
 #    b) Clear the cookie issued by "localhost". 
 #        For Chrome, you can do that here: chrome://settings/cookies
+#
+# 6.  You may see a "Go to Facebook" page before the perms dialog,
+#     due to this FB bug: http://goo.gl/ychaf
+#     As documented at that link, the way to avoid that is to use client-side redirects. 
+#     Set server_redirect_mode=False to try client-side redirects
 #------------------------------------------------------------------------
 
 import os
@@ -92,8 +97,11 @@ fb_graph_url   = "https://graph.facebook.com/me"
 
 #---------------------------------------------------------------------
 
+#
+# Put all the helper methods in a abstract class.
+#
 
-class MainHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+class BaseHandler(BaseHTTPServer.BaseHTTPRequestHandler):
   _access_token = None 
 
   #
@@ -150,6 +158,16 @@ class MainHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     self.send_header("Cache-control", "private")
     self.end_headers() 
     self.wfile.write("redirecting..")  
+    return
+
+#-----------------------------------------------------------
+#
+# FB makes POST calls to your site URL
+# when someone hits an app's canvas page
+#
+#-----------------------------------------------------------
+
+class MainHandler(BaseHandler):
    
   #
   # Client might be in three states, when this call comes in.
