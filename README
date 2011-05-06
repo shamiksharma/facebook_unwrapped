@@ -1,0 +1,21 @@
+
+This program demonstrates how to build a Facebook Canvas Iframe app
+using ONLY standard Python 2.6+. It does not use any Facebook wrappers.
+
+The goal of this app is to make it easier for a new developer 
+to understand how Facebook Oauth works. While FB wrapper libraries
+make it easier to use Facebook API they also hide important
+details, which hinders understanding. 
+
+More details about how to run this app is documented inside the code.
+
+Quick Summary
+1. Register a FB app on FB, and point it the Site URL to 
+   wherever you will be running this program. 
+   (e.g. http://localhost:8000/ )
+2. Get the appid, apikey, secret and plug them into the config
+   section of the program
+3. Run the app
+   % python facebook_unwrapped.py
+4. Go to the app on your browser
+   http://apps.facebook.com/your-app-name/
