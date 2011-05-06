@@ -61,7 +61,10 @@ from urlparse import urlparse
 # Based on  
 #     http://developers.facebook.com/docs/authentication/
 #
-# Facebook Graph auth sequence is as follows. User-U Facebook-F App-A
+# Facebook Graph auth sequence is as follows. 
+# Note that this is for "server-side flow"
+#
+# User-U Facebook-F App-A
 #
 #  U<->F: User goes to your app's facebook page. FB's resposne page
 #         has its chrome and an IFRAME for your app.
@@ -75,14 +78,24 @@ from urlparse import urlparse
 #        F->U->A : FB sends a "code" back to the App at the callback location 
 #                  specified in redirect_uri.
 #           A->F : App uses code (along with appid&secret) to directly request FB 
-#                  for a user_access_token 
-#           F->A : FB sends a "access_token" in response
-#           A->F : App makes FB-API calls using the access_token
-#           A->F : App may make more FB-API calls using the access_token
+#                  for a user_access_token over https. User does not see this message.
+#           F->A : FB sends a "access_token" in response. 
+#           A->F : App makes FB-API calls using the access_token. 
+#           A->F : App may make more FB-API calls using the access_token. 
 #  A->U: App uses the fb data to create its page and fill in the IFRAME.
 #
 #  Note that all these calls happen in the context of the original HTTP request.
 #  These long-standing connections are expensive for a webserver.
+#
+#  This program also shows how you can do the initial A->U->F oauth redirect using
+#  client-side javascript.  (server_redirect_mode = False)
+#
+#  Instead of sending back a HTTP 302, you just send back
+#  a regular page (HTTP 200) which has javascript that sets the top.location.href
+#  to the facebook's oauth page. That is not a full client-side flow; it is the
+#  same as the server-side flow described here, except the redirect trigger is
+#  done using javascript. This is useful because of the bug described at:
+#  http://goo.gl.ychaf   
 #
 #-----------------------------------------------------------------------
 
