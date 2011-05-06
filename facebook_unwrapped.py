@@ -256,6 +256,10 @@ class MainHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 #
 
 def main():
+  if fb_app_id.startswith("xx"):
+     print "Cannot start server."
+     print "Please update config parameters with your FB app's details"
+     return 
   server = BaseHTTPServer.HTTPServer(('', the_port), MainHandler)
   print "Server listening at port http://localhost:" + str(the_port) + "/"
   server.serve_forever()
