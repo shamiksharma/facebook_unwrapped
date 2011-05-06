@@ -1,4 +1,7 @@
 #-----------------------------------------------------------------------
+# Author :  Shamik Sharma
+# License:  Apache 2.0 license. You can copy and modify as you wish.
+#
 # This program was a learning exercise to understand the sequence of calls
 # used in Facebook Oauth. For that reason, it uses only standard Python
 # to make the necessary HTTP calls. 
